@@ -1,0 +1,32 @@
+name: MathUtility Repo using Maven, JUnit and CI (With GitHub Actions) | © 2023 golden-egghead
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 20 - Install JDK in Git server
+      uses: actions/setup-java@v3
+      with:
+        java-version: '20'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven - Compile, Run Unit Test, Receive .jar or faild Email
+      run: mvn -B package --file pom.xml
+      
+    - name: Distribute jar-war file
+      run: mkdir staging && cp target/*.jar staging   
+     
+    - name: Make hyperlink to jar-war file
+      uses: actions/upload-artifact@v1
+      with:
+        name: moi-nha-tuyen-dung-download-jar.zip #Create hyperlinh to download .jar file
+        path: staging
